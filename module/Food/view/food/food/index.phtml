@@ -1,0 +1,51 @@
+<style>
+a.button {
+    background: transparent url('http://www.oscaralexander.com/tutorials/img/bg_button_a.gif') no-repeat scroll top right;
+    color: #444;
+    display: block;
+    float: left;
+    font: normal 12px arial, sans-serif;
+    height: 24px;
+    margin-right: 6px;
+    padding-right: 18px; /* sliding doors padding */
+    text-decoration: none;
+}
+
+a.button span {
+    background: transparent url('http://www.oscaralexander.com/tutorials/img/bg_button_span.gif') no-repeat;
+    display: block;
+    line-height: 14px;
+    padding: 5px 0 5px 18px;
+}
+</style>
+
+<?php
+
+$title='Reservations';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<p>
+    <a href="<?php echo $this->url('food', array('action'=>'random'));?>">Get random restaurant</a><br />
+    <a href="<?php echo $this->url('food', array('action'=>'add'));?>">Add new</a>
+</p>
+
+<table class="table">
+<tr>
+    <th>Title</th>
+    <th>&nbsp;</th>
+</tr>
+<?php foreach ($reservations as $reservation) : ?>
+<tr>
+    <td><?php echo $this->escapeHtml($reservation->title);?></td>
+    <td>
+        <a href="<?php echo $this->url('food',
+            array('action'=>'view', 'id' => $reservation->id));?>">View</a>
+        <a href="<?php echo $this->url('food',
+            array('action'=>'edit', 'id' => $reservation->id));?>">Edit</a>
+        <a href="<?php echo $this->url('food',
+            array('action'=>'delete', 'id' => $reservation->id));?>">Delete</a>
+    </td>
+</tr>
+<?php endforeach; ?>
+</table>
