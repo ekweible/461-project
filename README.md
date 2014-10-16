@@ -1,52 +1,33 @@
-ZendSkeletonApplication
-=======================
+Medical Media Men Project
+=========================
 
-Introduction
-------------
-This is a simple, skeleton application using the ZF2 MVC layer and module
-systems. This application is meant to be used as a starting place for those
-looking to get their feet wet with ZF2.
+Setup
+-----
 
+#### Clone the repo
+```
+git clone git@github.com:ekweible/461-project.git
+```
 
-Installation
-------------
+#### Install all php dependencies
+```
+cd 461-project
+php composer.phar self-update
+php composer.phar install
+```
 
-Using Composer (recommended)
-----------------------------
-The recommended way to get a working copy of this project is to clone the repository
-and use `composer` to install dependencies using the `create-project` command:
+#### MAMP
+[Download MAMP](http://www.mamp.info/en/mamp_windows.html) for easily spinning up a local php/mysql server
 
-    curl -s https://getcomposer.org/installer | php --
-    php composer.phar create-project -sdev --repository-url="http://packages.zendframework.com" zendframework/skeleton-application path/to/install
+- Open MAMP
+- Open "Preferences" > "Web Server"
+- Change the "Document Root" to point to the `461-project/public/` directory
 
-Alternately, clone the repository and manually invoke `composer` using the shipped
-`composer.phar`:
+#### MySQL database configuration
+- Start the MAMP servers
+- Go to [phpMyAdmin](http://localhost:8888/MAMP/index.php?page=phpmyadmin&language=English)
+- Setup tables (I'll add more on this later)
 
-    cd my/project/dir
-    git clone git://github.com/zendframework/ZendSkeletonApplication.git
-    cd ZendSkeletonApplication
-    php composer.phar self-update
-    php composer.phar install
-
-(The `self-update` directive is to ensure you have an up-to-date `composer.phar`
-available.)
-
-Another alternative for downloading the project is to grab it via `curl`, and
-then pass it to `tar`:
-
-    cd my/project/dir
-    curl -#L https://github.com/zendframework/ZendSkeletonApplication/tarball/master | tar xz --strip-components=1
-
-You would then invoke `composer` to install dependencies per the previous
-example.
-
-Using Git submodules
---------------------
-Alternatively, you can install using native git submodules:
-
-    git clone git://github.com/zendframework/ZendSkeletonApplication.git --recursive
-
-Virtual Host
-------------
-Afterwards, set up a virtual host to point to the public/ directory of the
-project and you should be ready to go!
+#### Run App
+- Start the MAMP servers
+- Go to [http://localhost:8888](http://localhost:8888)
