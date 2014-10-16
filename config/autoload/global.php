@@ -32,8 +32,8 @@ return array(
 		'driver'   => 'pdo_mysql',
 		'hostname' => 'localhost',
 		'port'     => 3307,
-		'username' => 'restaurant',
-		'password' => 'se329',
+		'username' => 'root',
+		'password' => 'root',
 		'database' => 'restaurant',
 	),
     'service_manager' => array(
