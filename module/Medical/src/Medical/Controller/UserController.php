@@ -146,15 +146,6 @@ class UserController extends AbstractActionController
 		$form  = new UserForm();
 		$form->bind($user);
 		$form->get('submit')->setAttribute('value', 'Edit');
-		$form->add(array(
-		     'type' => 'Zend\Form\Element\MultiCheckbox',
-		     'name' => 'types',
-		     'options' => array(
-			     'label' => 'What do you like ?',
-		     ),
-	     	));
-		$form->get('types')->setValueOptions($options);
-		$form->get('types')->setValue($userTypes);
 		$request = $this->getRequest();
 		if ($request->isPost()) {
 			$form->setInputFilter($user->getInputFilter());
@@ -163,7 +154,7 @@ class UserController extends AbstractActionController
 			if ($form->isValid()) {
 				$data = $form->getData();
 				$userExists = $this->getUserTable()->getUserByName($data->username);
-				if(!$userExists)
+				if(!$userExists || $user->username != $data->username)
 				{
 					$data->types = implode(',',$request->getPost()->types);
 					$this->getUserTable()->saveUser($data);
