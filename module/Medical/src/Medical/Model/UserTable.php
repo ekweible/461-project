@@ -58,8 +58,8 @@ class UserTable
 		$data = array(
 			'username' => $user->username,
 			'password' => $user->password,
-			'types' => $user->types,
-			'shared' => $user->shared,
+            'email' => $user->email,
+            'role' => $user->role
 		);
 		
 		$id=(int)$user->id;
