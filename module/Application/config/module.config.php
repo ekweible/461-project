@@ -15,7 +15,7 @@ return array(
                 'options' => array(
                     'route'    => '/',
                     'defaults' => array(
-                        'controller' => 'Food\Controller\Food',
+                        'controller' => 'Medical\Controller\Medical',
                         'action'     => 'index',
                     ),
                 ),

@@ -1,0 +1,34 @@
+<?php
+
+$title = 'Login';
+$this->headTitle($title);
+
+
+?>
+
+<?php if(count($this->messages)) : ?>
+<ul>
+    <?php foreach ($this->messages as $msg) : ?>
+    <li><?php echo $msg; ?></li>
+    <?php endforeach; ?>
+</ul>
+<?php endif; ?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<?php
+$form = $this->form;
+$form->setAttribute('action', $this->url('user', array('action'=> 'index')));
+$form->prepare();
+
+echo $this->form()->openTag($form);
+echo $this->formHidden($form->get('id'));
+echo $this->formRow($form->get('username'));
+echo $this->formRow($form->get('password'));
+echo $this->formSubmit($form->get('submit'));
+
+
+?>
+
+or <a href="<?php echo $this->url('user', array('action'=>'add'));?>">register</a>
+
+<?php
+echo $this->form()->closeTag();

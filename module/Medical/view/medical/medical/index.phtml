@@ -1,0 +1,83 @@
+<style>
+a.button {
+    background: transparent url('http://www.oscaralexander.com/tutorials/img/bg_button_a.gif') no-repeat scroll top right;
+    color: #444;
+    display: block;
+    float: left;
+    font: normal 12px arial, sans-serif;
+    height: 24px;
+    margin-right: 6px;
+    padding-right: 18px; /* sliding doors padding */
+    text-decoration: none;
+}
+
+a.button span {
+    background: transparent url('http://www.oscaralexander.com/tutorials/img/bg_button_span.gif') no-repeat;
+    display: block;
+    line-height: 14px;
+    padding: 5px 0 5px 18px;
+}
+</style>
+<?php if(count($this->messages)) : ?>
+<ul>
+    <?php foreach ($this->messages as $msg) : ?>
+    <li><?php echo $msg; ?></li>
+    <?php endforeach; ?>
+</ul>
+<?php endif; ?>
+
+<?php
+
+$title='Reservations';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<p>
+    <a href="<?php echo $this->url('user', array('action'=>'edit'));?>">Edit Profile</a><br />
+    <a href="<?php echo $this->url('medical', array('action'=>'random'));?>">Get random restaurant</a><br />
+    <a href="<?php echo $this->url('medical', array('action'=>'add'));?>">Add new</a><br />
+    <a href="<?php echo $this->url('medical', array('action'=>'logout'));?>">Logout</a>
+</p>
+
+<table class="table">
+<tr>
+    <th>My Reservations</th>
+    <th>&nbsp;</th>
+</tr>
+<?php foreach ($reservations as $reservation) : ?>
+<tr>
+    <td><?php echo $this->escapeHtml($reservation->title);?></td>
+    <td width=50%>
+        <a href="<?php echo $this->url('medical',
+            array('action'=>'view', 'id' => $reservation->id));?>">View</a>
+        <a href="<?php echo $this->url('medical',
+            array('action'=>'edit', 'id' => $reservation->id));?>">Edit</a>
+        <a href="<?php echo $this->url('medical',
+            array('action'=>'delete', 'id' => $reservation->id));?>">Delete</a>
+        <a href="<?php echo $this->url('medical',
+            array('action'=>'share', 'id' => $reservation->id));?>">Share</a>
+    </td>
+</tr>
+<?php endforeach; ?>
+</table>
+
+<table class="table">
+<tr>
+    <th>Reservations Shared With Me</th>
+    <th>&nbsp;</th>
+</tr>
+<?php foreach ($shared as $reservation) : ?>
+<tr>
+    <td>
+	<?php if($reservation)
+		 echo $this->escapeHtml($reservation->title);
+		else
+			continue;
+	?></td>
+    <td width=50%>
+        <a href="<?php echo $this->url('medical',
+            array('action'=>'view', 'id' => $reservation->id));?>">View</a>
+    </td>
+</tr>
+<?php endforeach; ?>
+</table>
