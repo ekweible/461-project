@@ -35,6 +35,17 @@ class UserForm extends Form
 			),
 		));
 		$this->add(array(
+			'name'=> 'role',
+			'type' => 'Select',
+			'options'=>array(
+				'label'=> 'Password: ',
+				'value_options' => array(
+					'0' => 'User',
+					'1' => 'Admin',
+				),
+			),
+		));
+		$this->add(array(
 			'name'=>'submit',
 			'type'=>'submit',
 			'attributes'=>array(
