@@ -154,7 +154,7 @@ class UserController extends AbstractActionController
 			if ($form->isValid()) {
 				$data = $form->getData();
 				$userExists = $this->getUserTable()->getUserByName($data->username);
-				if(!$userExists || $user->username != $data->username)
+				if(!$userExists || $user->username == $data->username)
 				{
 					$data->types = implode(',',$request->getPost()->types);
 					$this->getUserTable()->saveUser($data);
