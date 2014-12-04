@@ -34,7 +34,7 @@ return array(
 		'port'     => 3307,
 		'username' => 'root',
 		'password' => 'root',
-		'database' => 'restaurant',
+		'database' => '461',
 	),
     'service_manager' => array(
         'factories' => array(
