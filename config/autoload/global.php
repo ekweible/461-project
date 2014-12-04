@@ -29,12 +29,12 @@ return array(
 return array(
 
 	'db' => array(
-		'driver'   => 'pdo_mysql',
-		'hostname' => 'localhost',
-		'port'     => 3307,
-		'username' => 'root',
-		'password' => 'root',
-		'database' => '461',
+        	'driver'   => 'pdo_mysql',
+        	'hostname' => 'localhost',
+        	'port'     => 3306,
+        	'username' => 'root',
+        	'password' => 'root',
+        	'database' => '461',
 	),
     'service_manager' => array(
         'factories' => array(

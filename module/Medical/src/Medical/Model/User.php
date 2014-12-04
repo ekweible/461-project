@@ -11,8 +11,8 @@ class User implements InputFilterAwareInterface
 	public $id;
 	public $password;
 	public $username;
-	public $types;
-	public $shared;
+    public $email;
+    public $role;
 	protected $inputFilter;
 	
 	public function exchangeArray($data)
@@ -20,8 +20,8 @@ class User implements InputFilterAwareInterface
 		$this->id = (isset($data['id'])) ? $data['id'] : null;
 		$this->password = (isset($data['password'])) ? $data['password'] : null;
 		$this->username = (isset($data['username'])) ? $data['username'] : null;
-		$this->types = (isset($data['types'])) ? $data['types'] : null;
-		$this->shared = (isset($data['shared'])) ? $data['shared'] : null;
+		$this->email = (isset($data['email'])) ? $data['email'] : null;
+		$this->role = (isset($data['role'])) ? $data['role'] : null;
 	}
 	
 	public function getArrayCopy()
