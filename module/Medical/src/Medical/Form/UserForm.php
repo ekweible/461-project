@@ -21,6 +21,13 @@ class UserForm extends Form
 			),
 		));
 		$this->add(array(
+			'name'=> 'email',
+			'type' => 'Text',
+			'options'=>array(
+				'label'=> 'Email:',
+			),
+		));
+		$this->add(array(
 			'name'=> 'password',
 			'type' => 'Text',
 			'options'=>array(
