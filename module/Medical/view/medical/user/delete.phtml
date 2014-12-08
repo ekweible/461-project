@@ -1,24 +1,28 @@
 <?php
-// module/Album/view/reservation/album/delete.phtml:
-
-$title = 'Delete reservation';
+$title = 'Delete User';
 $this->headTitle($title);
 ?>
+<?php if(count($this->messages)) : ?>
+<ul>
+    <?php foreach ($this->messages as $msg) : ?>
+    <li><?php echo $msg; ?></li>
+    <?php endforeach; ?>
+</ul>
+<?php endif; ?>
 <h1><?php echo $this->escapeHtml($title); ?></h1>
 
-<p>Are you sure that you want to delete
-    '<?php echo $this->escapeHtml($reservation->title); ?>'
-</p>
 <?php
-$url = $this->url('medical', array(
-    'action' => 'delete',
-    'id'     => $this->id,
+$form = $this->form;
+$form->setAttribute('action', $this->url(
+    'user',
+    array(
+        'action' => 'delete',
+    )
 ));
-?>
-<form action="<?php echo $url; ?>" method="post">
-<div>
-    <input type="hidden" name="id" value="<?php echo (int) $reservation->id; ?>" />
-    <input type="submit" name="del" value="Yes" />
-    <input type="submit" name="del" value="No" />
-</div>
-</form>
+$form->prepare();
+
+echo $this->form()->openTag($form);
+
+echo $this->formRow($form->get('user'));
+echo $this->formSubmit($form->get('submit'));
+echo $this->form()->closeTag();
