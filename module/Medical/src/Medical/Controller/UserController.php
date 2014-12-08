@@ -1,6 +1,8 @@
 <?php
 namespace Medical\Controller;
+use Medical\Form\PasswordRecoveryForm;
 use Medical\Form\UserForm;
+use Medical\Model\PasswordRecovery;
 use Zend\Form\Form;
 use Medical\Model\User;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -219,4 +221,42 @@ class UserController extends AbstractActionController
 	public function viewAction()
 	{
 	}
+
+    public function recoverAction() {
+        $form = new PasswordRecoveryForm();
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $passwordRecovery = new PasswordRecovery();
+            $form->setInputFilter($passwordRecovery->getInputFilter());
+            $form->setData($request->getPost());
+
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $id = $this->getUserTable()->getUserByEmail($data['email']);
+                if (!$id) {
+                    $this->flashMessenger()->addMessage('No account with that email exists.');
+                } else {
+                    $this->emailPasswordToUser($id);
+                    $this->flashMessenger()->addMessage('Your password has been emailed to you.');
+                }
+            }
+        }
+        return array(	'form' => $form,
+            'messages' => $this->flashMessenger()->getCurrentMessages());
+    }
+
+    public function emailPasswordTouser($id) {
+        $user = $this->getUserTable()->getUser($id);
+
+        $to      = $user->email;
+        $subject = 'Medical Video System Password Recovery';
+        $message = 'Username: ' . $user->username . '\n';
+        $message .= 'Password: ' . $user->password . '\n';
+        $headers = '';
+//        $headers .= 'From: webmaster@example.com' . "\r\n";
+//        $headers .= 'Reply-To: webmaster@example.com' . "\r\n";
+
+        mail($to, $subject, $message, $headers);
+    }
 }
