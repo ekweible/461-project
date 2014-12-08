@@ -3,7 +3,6 @@ namespace Medical\Controller;
 use Medical\Form\UserForm;
 use Zend\Form\Form;
 use Medical\Model\User;
-use Medical\Model\Type;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Session\Config\SessionConfig;
@@ -42,15 +41,6 @@ class UserController extends AbstractActionController
 			$this->userTable = $sm->get('Medical\Model\UserTable');
 		}
 		return $this->userTable;
-	}
-	public function getTypeTable()
-	{
-		if(!$this->typeTable)
-		{
-			$sm = $this->getServiceLocator();
-			$this->typeTable = $sm->get('Medical\Model\TypeTable');
-		}
-		return $this->typeTable;
 	}
 
 	public function indexAction()
@@ -138,13 +128,6 @@ class UserController extends AbstractActionController
 			));
 		}
 		$user = $this->getUserTable()->getUser($id);
-		$types = $this->getTypeTable()->fetchAll();
-		$options = array();
-		foreach($types as $type)
-		{
-			$options[$type->id]=$type->name;
-		}
-		$userTypes = $this->getTypeTable()->getuserTypes($user->types);
 		$form  = new UserForm();
 		$form->bind($user);
 		$form->get('submit')->setAttribute('value', 'Edit');
@@ -158,7 +141,6 @@ class UserController extends AbstractActionController
 				$userExists = $this->getUserTable()->getUserByName($data->username);
 				if(!$userExists || $user->username == $data->username)
 				{
-					$data->types = implode(',',$request->getPost()->types);
 					$this->getUserTable()->saveUser($data);
 	
 					// Redirect to list of users
