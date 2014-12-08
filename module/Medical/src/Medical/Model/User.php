@@ -14,6 +14,7 @@ class User implements InputFilterAwareInterface
     public $email;
     public $role;
 	protected $inputFilter;
+    protected $passwordRecoveryInputFilter;
 	
 	public function exchangeArray($data)
 	{

@@ -41,6 +41,15 @@ class UserTable
 		else
 			return $row;
 	}
+    public function getUserByEmail($email)
+    {
+        $rowset = $this->tableGateway->select(array('email' => $email));
+        $row = $rowset->current();
+        if (!$row)
+            return false;
+        else
+            return $row;
+    }
 	public function getUser($id)
 	{
 		$id=(int)$id;

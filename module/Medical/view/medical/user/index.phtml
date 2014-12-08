@@ -28,7 +28,11 @@ echo $this->formSubmit($form->get('submit'));
 
 ?>
 
-or <a href="<?php echo $this->url('user', array('action'=>'add'));?>">register</a>
+<a href="<?php echo $this->url('user', array('action'=>'recover'));?>">forgot password?</a>
+
+<br>
+
+<a href="<?php echo $this->url('user', array('action'=>'add'));?>">register</a>
 
 <?php
 echo $this->form()->closeTag();
