@@ -3,6 +3,7 @@ namespace Medical\Controller;
 use Medical\Form\PasswordRecoveryForm;
 use Medical\Form\UserForm;
 use Medical\Model\PasswordRecovery;
+use Zend\Form\Form;
 use Medical\Model\User;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -159,8 +160,63 @@ class UserController extends AbstractActionController
 			'form' => $form,
 			'messages' => $this->flashMessenger()->getCurrentMessages());
 	}
+
 	public function deleteAction()
 	{
+		$id = $this->user->id;
+		if (!$id) {
+			return $this->redirect()->toRoute('user', array(
+				'action' => 'add'
+			));
+		}
+		$users = $this->getUserTable()->fetchAll();
+		$options = array();
+		foreach($users as $user)
+		{
+			$options[$user->id]=$user->username;
+		}
+		$userTypes = $this->getTypeTable()->getuserTypes($user->types);
+		$form  = new Form();
+		$form->add(array(
+			'name'=>'submit',
+			'type'=>'submit',
+			'attributes'=>array(
+				'value'=>'Submit',
+				'id'=>'submitbutton',
+			),
+		));
+		$form->add(array(
+			'name'=> 'user',
+			'type' => 'Select',
+			'options'=>array(
+				'label'=> 'Role: ',
+				'options'=>$options
+			),
+		));
+		$request = $this->getRequest();
+		if ($request->isPost()) {
+			$form->setData($request->getPost());
+
+			if ($form->isValid()) {
+				$data = $form->getData();
+				if($id != $data['user'])
+				{
+					$user = $this->getUserTable()->deleteUser($data['user']);
+					$this->flashMessenger()->addMessage('User Deleted');
+					return $this->redirect()->toRoute('user', array('action' => 'delete'));
+				}
+				else
+				{
+					$this->flashMessenger()->addMessage('You Cannot Delete Yourself');
+				}
+					
+			}
+		}
+
+		return array(
+			'id' => $id,
+			'form' => $form,
+			'messages' => $this->flashMessenger()->getCurrentMessages());
 	}
 	public function viewAction()
 	{
