@@ -38,7 +38,7 @@ class UserForm extends Form
 			'name'=> 'role',
 			'type' => 'Select',
 			'options'=>array(
-				'label'=> 'Password: ',
+				'label'=> 'Role: ',
 				'value_options' => array(
 					'0' => 'User',
 					'1' => 'Admin',

@@ -56,7 +56,8 @@ class UserController extends AbstractActionController
 	{
 		$form = new UserForm();
 		$form->get('submit')->setValue('Login');
-
+		$form->remove('email');
+		$form->remove('role');
 		$request = $this->getRequest();
 		if ($request->isPost()) {
 			$user = new User();
