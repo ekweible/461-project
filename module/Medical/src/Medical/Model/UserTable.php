@@ -75,7 +75,6 @@ class UserTable
             'email' => $user->email,
             'role' => $user->role
 		);
-		
 		$id=(int)$user->id;
 		if($id == 0)
 		{
