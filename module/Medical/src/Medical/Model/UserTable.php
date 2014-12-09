@@ -61,7 +61,12 @@ class UserTable
 		}
 		return $row;
 	}
-
+	public function getUsersByRole($roleId)
+	{
+		$id = (int) $roleId;
+		$rowset = $this->tableGateway->select(array('role'=>$id));
+		return $rowset;
+	}
 	public function saveUser(User $user)
 	{
 		$data = array(

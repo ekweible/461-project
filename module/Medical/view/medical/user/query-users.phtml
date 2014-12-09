@@ -1,0 +1,48 @@
+<?php
+$title = 'Select Users by Role';
+$this->headTitle($title);
+?>
+<?php if(count($this->messages)) : ?>
+<ul>
+    <?php foreach ($this->messages as $msg) : ?>
+    <li><?php echo $msg; ?></li>
+    <?php endforeach; ?>
+</ul>
+<?php endif; ?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+
+<?php
+$form = $this->form;
+$form->setAttribute('action', $this->url(
+    'user',
+    array(
+        'action' => 'query-users',
+    )
+));
+$form->prepare();
+
+echo $this->form()->openTag($form);
+
+echo $this->formRow($form->get('role'));
+echo $this->formSubmit($form->get('submit'));
+echo $this->form()->closeTag();
+?>
+<?php if($users): ?>
+	<table class="table">
+	<tr>
+	    <th>Title</th>
+	    <th>&nbsp;</th>
+	</tr>
+	<?php foreach ($users as $user) : ?>
+	<tr>
+	    <td><?php echo $this->escapeHtml($user->username);?></td>
+	    <td>
+		<a href="<?php echo $this->url('user',
+		    array('action'=>'edit', 'id' => $user->id));?>">Edit</a>
+<!--		<a href="<?php echo $this->url('user',
+		    array('action'=>'delete', 'id' => $user->id));?>">Delete</a>
+--!>	    </td>
+	</tr>
+	<?php endforeach; ?>
+	</table>
+<?php endif; ?>
