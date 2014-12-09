@@ -1,38 +1,40 @@
-<?php
+<style>
+    a.button {
+        background: transparent url('http://www.oscaralexander.com/tutorials/img/bg_button_a.gif') no-repeat scroll top right;
+        color: #444;
+        display: block;
+        float: left;
+        font: normal 12px arial, sans-serif;
+        height: 24px;
+        margin-right: 6px;
+        padding-right: 18px; /* sliding doors padding */
+        text-decoration: none;
+    }
 
-$title = 'Login';
-$this->headTitle($title);
-
-
-?>
-
+    a.button span {
+        background: transparent url('http://www.oscaralexander.com/tutorials/img/bg_button_span.gif') no-repeat;
+        display: block;
+        line-height: 14px;
+        padding: 5px 0 5px 18px;
+    }
+</style>
 <?php if(count($this->messages)) : ?>
-<ul>
-    <?php foreach ($this->messages as $msg) : ?>
-    <li><?php echo $msg; ?></li>
-    <?php endforeach; ?>
-</ul>
+    <ul>
+        <?php foreach ($this->messages as $msg) : ?>
+            <li><?php echo $msg; ?></li>
+        <?php endforeach; ?>
+    </ul>
 <?php endif; ?>
-<h1><?php echo $this->escapeHtml($title); ?></h1>
+
 <?php
-$form = $this->form;
-$form->setAttribute('action', $this->url('user', array('action'=> 'index')));
-$form->prepare();
 
-echo $this->form()->openTag($form);
-echo $this->formHidden($form->get('id'));
-echo $this->formRow($form->get('username'));
-echo $this->formRow($form->get('password'));
-echo $this->formSubmit($form->get('submit'));
-
-
+$title='Users';
+$this->headTitle($title);
 ?>
-
-<a href="<?php echo $this->url('user', array('action'=>'recover'));?>">forgot password?</a>
-
-<br>
-
-<a href="<?php echo $this->url('user', array('action'=>'add'));?>">register</a>
-
-<?php
-echo $this->form()->closeTag();
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<p>
+    <a href="<?php echo $this->url('user', array('action'=>'select-edit'));?>">Edit User Accounts</a><br />
+    <a href="<?php echo $this->url('user', array('action'=>'query-users'));?>">Query User Accounts by role</a><br />
+    <a href="<?php echo $this->url('user', array('action'=>'delete'));?>">Delete Users</a><br />
+    <a href="<?php echo $this->url('medical', array('action'=>'logout'));?>">Logout</a>
+</p>

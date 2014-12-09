@@ -45,7 +45,14 @@ class UserController extends AbstractActionController
 		return $this->userTable;
 	}
 
-	public function indexAction()
+    public function indexAction()
+    {
+        return array(
+            'messages' => $this->flashMessenger()->getCurrentMessages()
+        );
+    }
+
+	public function loginAction()
 	{
 		$form = new UserForm();
 		$form->get('submit')->setValue('Login');
@@ -98,7 +105,6 @@ class UserController extends AbstractActionController
 					$user->exchangeArray($data);
 					$id = $this->getUserTable()->saveUser($user);
 					$userExists=$this->getUserTable()->validateUser($data['username'],$data['password']);
-					// Redirect to a view of this reservation
 					if($userExists){
 						$this->initSession(array(
 						    'remember_me_seconds' => 600,
@@ -108,8 +114,7 @@ class UserController extends AbstractActionController
 						$sessionUser = new Container('user');
 						$sessionUser->uid = $userExists;
 					}
-					// Redirect to a view of this reservation
-					return $this->redirect()->toRoute('medical', array('action' => 'index'));
+					return $this->redirect()->toRoute('user', array('action' => 'index'));
 				}
 				else
 				{
@@ -216,7 +221,7 @@ class UserController extends AbstractActionController
 					$this->getUserTable()->saveUser($data);
 	
 					// Redirect to list of users
-					return $this->redirect()->toRoute('medical');
+					return $this->redirect()->toRoute('user');
 				}
 				else
 				{

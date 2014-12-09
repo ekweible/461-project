@@ -13,15 +13,53 @@ mysql> desc room;
 
 namespace Medical\Model;
 
-class Room
+use Zend\InputFilter\Factory as InputFactory;
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\InputFilterAwareInterface;
+use Zend\InputFilter\InputFilterInterface;
+
+
+class Room implements InputFilterAwareInterface
 {
-	public $RoomID;
-	public $RoomNum;
+	public $roomid;
+	public $roomnum;
+    protected $inputFilter;
 	
 	public function exchangeArray($data)
 	{
-		$this->RoomID = (!empty($data['RoomID'])) ? $data['RoomID'] : null;
-		$this->RoomNum = (!empty($data['RoomNum'])) ? $data['RoomNum'] : null;
+		$this->roomid = (!empty($data['roomid'])) ? $data['roomid'] : null;
+		$this->roomnum = (!empty($data['roomnum'])) ? $data['roomnum'] : null;
 	}
+
+    public function setInputFilter(InputFilterInterface $inputFilter)
+    {
+        throw new \Exception("not used");
+    }
+
+    public function getInputFilter()
+    {
+        if(!$this->inputFilter)
+        {
+            $inputFilter = new InputFilter();
+            $factory = new InputFactory();
+
+            $inputFilter->add($factory->createInput(array(
+                'name' => 'roomid',
+                'required' => true,
+                'filters' => array(
+                    array('name'=>'Int'),
+                ),
+            )));
+            $inputFilter->add($factory->createInput(array(
+                'name'=>'roomnum',
+                'required'=>true,
+                'filters'=>array(
+                    array('name'=>'Int'),
+                ),
+            )));
+            $this->inputFilter=$inputFilter;
+        }
+        return $this->inputFilter;
+    }
 }
 

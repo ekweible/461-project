@@ -3,6 +3,7 @@ return array(
 	'controllers'=>array(
 		'invokables'=> array(
 			'Medical\Controller\Medical'=>'Medical\Controller\MedicalController',
+            'Medical\Controller\Room'=>'Medical\Controller\RoomController',
 			'Medical\Controller\User'=>'Medical\Controller\UserController',
 		),
 	),
@@ -23,6 +24,20 @@ return array(
 					),
 				),
 			),
+            'room'=>array(
+                'type'=>'segment',
+                'options'=>array(
+                    'route'=>'/room[/:action][/:id]',
+                    'constraints'=>array(
+                        'action'=>'[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'=>'[0-9]+',
+                    ),
+                    'defaults'=>array(
+                        'controller'=>'Medical\Controller\Room',
+                        'action'=>'index',
+                    ),
+                )
+            ),
 			'user'=>array(
 				'type'=>'segment',
 				'options'=>array(
