@@ -78,18 +78,57 @@ class Module
 					$resultSetPrototype->setArrayObjectPrototype(new User());
 					return new tableGateway('user', $dbAdapter, null, $resultSetPrototype);
 				},
-				'Medical\Model\TypeTable'=>function($sm)
+				'Medical\Model\RoomTable'=>function($sm)
 				{
-					$tableGateway=$sm->get('TypeTableGateway');
-					$table=new TypeTable($tableGateway);
+					$tableGateway=$sm->get('RoomTableGateway');
+					$table=new RoomTable($tableGateway);
 					return $table;
 				},
-				'TypeTableGateway'=>function($sm)
+				'RoomTableGateway'=>function($sm)
 				{
 					$dbAdapter=$sm->get('Zend\Db\Adapter\Adapter');
 					$resultSetPrototype = new ResultSet();
-					$resultSetPrototype->setArrayObjectPrototype(new Type());
-					return new tableGateway('type', $dbAdapter, null, $resultSetPrototype);
+					$resultSetPrototype->setArrayObjectPrototype(new Room());
+					return new tableGateway('room', $dbAdapter, null, $resultSetPrototype);
+				},
+				'Medical\Model\MachineTable'=>function($sm)
+				{
+					$tableGateway=$sm->get('MachineTableGateway');
+					$table=new MachineTable($tableGateway);
+					return $table;
+				},
+				'MachineTableGateway'=>function($sm)
+				{
+					$dbAdapter=$sm->get('Zend\Db\Adapter\Adapter');
+					$resultSetPrototype = new ResultSet();
+					$resultSetPrototype->setArrayObjectPrototype(new Machine());
+					return new tableGateway('machine', $dbAdapter, null, $resultSetPrototype);
+				},
+				'Medical\Model\VideoTable'=>function($sm)
+				{
+					$tableGateway=$sm->get('VideoTableGateway');
+					$table=new VideoTable($tableGateway);
+					return $table;
+				},
+				'VideoTableGateway'=>function($sm)
+				{
+					$dbAdapter=$sm->get('Zend\Db\Adapter\Adapter');
+					$resultSetPrototype = new ResultSet();
+					$resultSetPrototype->setArrayObjectPrototype(new Video());
+					return new tableGateway('video', $dbAdapter, null, $resultSetPrototype);
+				},
+				'Medical\Model\SoftwareTable'=>function($sm)
+				{
+					$tableGateway=$sm->get('SoftwareTableGateway');
+					$table=new SoftwareTable($tableGateway);
+					return $table;
+				},
+				'SoftwareTableGateway'=>function($sm)
+				{
+					$dbAdapter=$sm->get('Zend\Db\Adapter\Adapter');
+					$resultSetPrototype = new ResultSet();
+					$resultSetPrototype->setArrayObjectPrototype(new Software());
+					return new tableGateway('software', $dbAdapter, null, $resultSetPrototype);
 				},
 			),
 		);
