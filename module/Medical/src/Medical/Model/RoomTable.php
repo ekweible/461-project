@@ -18,9 +18,9 @@ class RoomTable
 		return $resultSet;
 	}
 	
-	public function getOneByRoomId($id)
+	public function getRoomById($id)
 	{
-		$rowset = $this->tableGateway->select(array('RoomID'=>$id));
+		$rowset = $this->tableGateway->select(array('roomid'=>$id));
 		$row = $rowset->current();
 		if(!$row)
 		{
@@ -29,6 +29,38 @@ class RoomTable
 		return $row;
 	}
 
+    public function getRoomByNum($num)
+    {
+        $rowset = $this->tableGateway->select(array('roomnum'=>$num));
+        $row = $rowset->current();
+        if (!$row)
+        {
+            return null;
+        }
+        return $row;
+    }
 
-
+    public function saveUser(Room $room)
+    {
+        $data = array(
+            'roomnum' => $room->roomnum,
+        );
+        $id=(int)$room->roomid;
+        if($id == 0)
+        {
+            $this->tableGateway->insert($data);
+        }
+        else
+        {
+            if($this->getRoomById($id))
+            {
+                $this->tableGateway->update($data, array('roomid' => $id));
+            }
+            else
+            {
+                throw new \Exception('form id does not exist');
+            }
+        }
+        return $this->tableGateway->lastInsertValue;
+    }
 }

@@ -47,7 +47,7 @@ class MedicalController extends AbstractActionController
 			$this->user = $session->uid;
 		}
 		else
-			return $this->redirect()->toRoute('user', array('action' => 'index'));
+			return $this->redirect()->toRoute('user', array('action' => 'login'));
 
 
 		return parent::onDispatch( $e );
@@ -64,7 +64,7 @@ class MedicalController extends AbstractActionController
 	{
 		$session = new Container('user');
 		$session->getManager()->getStorage()->clear('user');
-		return $this->redirect()->toRoute('user', array('action' => 'index'));
+		return $this->redirect()->toRoute('user', array('action' => 'login'));
 
 	}
 
