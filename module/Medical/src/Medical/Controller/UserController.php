@@ -120,10 +120,57 @@ class UserController extends AbstractActionController
 		return array(	'form' => $form,
 				'messages' => $this->flashMessenger()->getCurrentMessages());
 	}
+
+	public function selectEditAction()
+	{
+		$id = $this->user->id;
+		if (!$id) {
+			return $this->redirect()->toRoute('user', array(
+				'action' => 'add'
+			));
+		}
+		$users = $this->getUserTable()->fetchAll();
+		$options = array();
+		foreach($users as $user)
+		{
+			$options[$user->id]=$user->username;
+		}
+		$form  = new Form();
+		$form->add(array(
+			'name'=>'submit',
+			'type'=>'submit',
+			'attributes'=>array(
+				'value'=>'Submit',
+				'id'=>'submitbutton',
+			),
+		));
+		$form->add(array(
+			'name'=> 'user',
+			'type' => 'Select',
+			'options'=>array(
+				'label'=> 'Role: ',
+				'options'=>$options
+			),
+		));
+		$request = $this->getRequest();
+		if ($request->isPost()) {
+			$form->setData($request->getPost());
+
+			if ($form->isValid()) {
+				$data = $form->getData();
+				return $this->redirect()->toRoute('user', array('action' => 'edit', 'id' => $data['user']));
+			}
+		}
+
+		return array(
+			'id' => $id,
+			'form' => $form,
+			'messages' => $this->flashMessenger()->getCurrentMessages());
+	}
   	public function editAction()
 	{
-
-		$id = $this->user->id;
+		//$id = $this->user->id;
+		$id = (int) $this->params()->fromRoute('id', 0);
 		if (!$id) {
 			return $this->redirect()->toRoute('user', array(
 				'action' => 'add'
@@ -175,7 +222,6 @@ class UserController extends AbstractActionController
 		{
 			$options[$user->id]=$user->username;
 		}
-		$userTypes = $this->getTypeTable()->getuserTypes($user->types);
 		$form  = new Form();
 		$form->add(array(
 			'name'=>'submit',
