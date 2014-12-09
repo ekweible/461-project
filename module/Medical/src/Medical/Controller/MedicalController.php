@@ -9,7 +9,7 @@ class MedicalController extends AbstractActionController
 {
 	protected $userTable;
 	protected $machineTable;
-	protected $foodTable;
+	protected $softwareTable;
 	protected $reservationTable;
 	protected $user;
 	public function getUserTable()
@@ -29,6 +29,15 @@ class MedicalController extends AbstractActionController
 			$this->machineTable = $sm->get('Medical\Model\MachineTable');
 		}
 		return $this->machineTable;
+	}
+	public function getSoftwareTable()
+	{
+		if(!$this->softwareTable)
+		{
+			$sm = $this->getServiceLocator();
+			$this->softwareTable = $sm->get('Medical\Model\SoftwareTable');
+		}
+		return $this->softwareTable;
 	}
 	public function onDispatch( \Zend\Mvc\MvcEvent $e )
 	{
@@ -90,12 +99,14 @@ class MedicalController extends AbstractActionController
 
 			if ($form->isValid()) {
 				$data = $form->getData();
-				$users = $this->getUserTable()->getUsersByRole($data['role']);
+				$machines = $this->getMachineTable()->getOneByMachineip($data['machine']);
+				$software = $this->getSoftwareTable()->getByMachineip($data['machine']);
 			}
 		}
 
 		return array(
-			'users' => $users,
+			'm' => $machines,
+			'software' => $software,
 			'form' => $form,
 			'messages' => $this->flashMessenger()->getCurrentMessages());
 	}
