@@ -302,11 +302,11 @@ class UserController extends AbstractActionController
 
             if ($form->isValid()) {
                 $data = $form->getData();
-                $id = $this->getUserTable()->getUserByEmail($data['email']);
-                if (!$id) {
+                $user = $this->getUserTable()->getUserByEmail($data['email']);
+                if (!$user) {
                     $this->flashMessenger()->addMessage('No account with that email exists.');
                 } else {
-                    $this->emailPasswordToUser($id);
+                    $this->emailPasswordToUser($user);
                     $this->flashMessenger()->addMessage('Your password has been emailed to you.');
                 }
             }
@@ -315,9 +315,7 @@ class UserController extends AbstractActionController
             'messages' => $this->flashMessenger()->getCurrentMessages());
     }
 
-    public function emailPasswordTouser($id) {
-        $user = $this->getUserTable()->getUser($id);
-
+    public function emailPasswordToUser($user) {
         $to      = $user->email;
         $subject = 'Medical Video System Password Recovery';
         $message = 'Username: ' . $user->username . '\n';
