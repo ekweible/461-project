@@ -1,0 +1,28 @@
+<?php
+$title = 'Select User to Edit';
+$this->headTitle($title);
+?>
+<?php if(count($this->messages)) : ?>
+<ul>
+    <?php foreach ($this->messages as $msg) : ?>
+    <li><?php echo $msg; ?></li>
+    <?php endforeach; ?>
+</ul>
+<?php endif; ?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+
+<?php
+$form = $this->form;
+$form->setAttribute('action', $this->url(
+    'user',
+    array(
+        'action' => 'select-edit',
+    )
+));
+$form->prepare();
+
+echo $this->form()->openTag($form);
+
+echo $this->formRow($form->get('user'));
+echo $this->formSubmit($form->get('submit'));
+echo $this->form()->closeTag();

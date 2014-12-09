@@ -167,6 +167,29 @@ class UserController extends AbstractActionController
 			'form' => $form,
 			'messages' => $this->flashMessenger()->getCurrentMessages());
 	}
+
+	public function queryUsersAction()
+	{
+		$form  = new UserForm();
+		$form->remove('password');
+		$form->remove('email');
+		$form->remove('id');
+		$form->remove('username');
+		$request = $this->getRequest();
+		if ($request->isPost()) {
+			$form->setData($request->getPost());
+
+			if ($form->isValid()) {
+				$data = $form->getData();
+				$users = $this->getUserTable()->getUsersByRole($data['role']);
+			}
+		}
+
+		return array(
+			'users' => $users,
+			'form' => $form,
+			'messages' => $this->flashMessenger()->getCurrentMessages());
+	}
   	public function editAction()
 	{
 		//$id = $this->user->id;
