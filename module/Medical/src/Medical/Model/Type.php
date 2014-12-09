@@ -9,7 +9,7 @@ class Type
 	public function exchangeArray($data)
 	{
 		$this->id = (!empty($data['id'])) ? $data['id'] : null;
-		$this->name = (!empty($data['id'])) ? $data['name'] : null;
+		$this->name = (!empty($data['name'])) ? $data['name'] : null;
 	}
 }
 
