@@ -1,0 +1,24 @@
+<?php
+
+$title = 'Rooms';
+$this->headTitle($title);
+
+
+?>
+
+<?php if(count($this->messages)) : ?>
+<ul>
+    <?php foreach ($this->messages as $msg) : ?>
+        <li><?php echo $msg; ?></li>
+    <?php endforeach; ?>
+</ul>
+
+<?php endif; ?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<p>
+    <a href="<?php echo $this->url('room', array('action' => 'query'));?>">Query Rooms</a><br>
+    <a href="<?php echo $this->url('room', array('action' => 'add'));?>">Add Room</a><br>
+    <a href="<?php echo $this->url('room', array('action' => 'edit'));?>">Edit Room</a><br>
+    <a href="<?php echo $this->url('room', array('action' => 'delete'));?>">Delete Room</a><br>
+</p>
+
