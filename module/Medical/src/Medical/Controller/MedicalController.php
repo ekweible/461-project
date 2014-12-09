@@ -1,5 +1,6 @@
 <?php
 namespace Medical\Controller;
+use Zend\Form\Form;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Session\Container;
@@ -7,6 +8,7 @@ use Zend\Session\Container;
 class MedicalController extends AbstractActionController
 {
 	protected $userTable;
+	protected $machineTable;
 	protected $foodTable;
 	protected $reservationTable;
 	protected $user;
@@ -18,6 +20,15 @@ class MedicalController extends AbstractActionController
 			$this->userTable = $sm->get('Medical\Model\UserTable');
 		}
 		return $this->userTable;
+	}
+	public function getMachineTable()
+	{
+		if(!$this->machineTable)
+		{
+			$sm = $this->getServiceLocator();
+			$this->machineTable = $sm->get('Medical\Model\MachineTable');
+		}
+		return $this->machineTable;
 	}
 	public function onDispatch( \Zend\Mvc\MvcEvent $e )
 	{
@@ -44,8 +55,48 @@ class MedicalController extends AbstractActionController
 	{
 		$session = new Container('user');
 		$session->getManager()->getStorage()->clear('user');
-			return $this->redirect()->toRoute('user', array('action' => 'index'));
+		return $this->redirect()->toRoute('user', array('action' => 'index'));
 
 	}
 
+	public function queryMachinesAction()
+	{
+		$machines = $this->getMachineTable()->fetchAll();
+		$options = array();
+		foreach($machines as $machine)
+		{
+			$options[$machine->machineip]=$machine->machineip;
+		}
+		$form  = new Form();
+		$form->add(array(
+			'name'=>'submit',
+			'type'=>'submit',
+			'attributes'=>array(
+				'value'=>'Submit',
+				'id'=>'submitbutton',
+			),
+		));
+		$form->add(array(
+			'name'=> 'machine',
+			'type' => 'Select',
+			'options'=>array(
+				'label'=> 'Machine IP: ',
+				'options'=>$options
+			),
+		));
+		$request = $this->getRequest();
+		if ($request->isPost()) {
+			$form->setData($request->getPost());
+
+			if ($form->isValid()) {
+				$data = $form->getData();
+				$users = $this->getUserTable()->getUsersByRole($data['role']);
+			}
+		}
+
+		return array(
+			'users' => $users,
+			'form' => $form,
+			'messages' => $this->flashMessenger()->getCurrentMessages());
+	}
 }

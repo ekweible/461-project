@@ -3,7 +3,7 @@ namespace Medical\Model;
 
 use Zend\Db\TableGateway\TableGateway;
 
-class TypeTable
+class MachineTable
 {
 	protected $tableGateway;
 	

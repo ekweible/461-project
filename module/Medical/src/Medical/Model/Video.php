@@ -22,7 +22,7 @@ desc video;
 
 namespace Medical\Model;
 
-class Software
+class Video
 {
 	public $videoid;
 	public $capturedvideoname;

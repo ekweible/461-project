@@ -2,12 +2,20 @@
 namespace Medical;
 
 use Medical\Model\Food;
+use Medical\Model\Room;
+use Medical\Model\Machine;
+use Medical\Model\Video;
+use Medical\Model\Software;
 use Medical\Model\Reservation;
 use Medical\Model\User;
 use Medical\Model\Type;
 use Medical\Model\FoodTable;
 use Medical\Model\ReservationTable;
 use Medical\Model\UserTable;
+use Medical\Model\MachineTable;
+use Medical\Model\RoomTable;
+use Medical\Model\VideoTable;
+use Medical\Model\SoftwareTable;
 use Medical\Model\TypeTable;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
