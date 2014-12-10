@@ -6,18 +6,29 @@ use Zend\Db\TableGateway\TableGateway;
 class RoomTable
 {
 	protected $tableGateway;
+    protected $machineTable;
 	
 	public function __construct(TableGateway $tableGateway)
 	{
 		$this->tableGateway = $tableGateway;
 	}
+
+    public function getMachineTable()
+    {
+        if(!$this->machineTable)
+        {
+            $sm = $this->getServiceLocator();
+            $this->machineTable = $sm->get('Medical\Model\MachineTable');
+        }
+        return $this->machineTable;
+    }
 	
 	public function fetchAll()
 	{
 		$resultSet = $this->tableGateway->select();
 		return $resultSet;
 	}
-	
+
 	public function getRoomById($id)
 	{
 		$rowset = $this->tableGateway->select(array('roomid'=>$id));
