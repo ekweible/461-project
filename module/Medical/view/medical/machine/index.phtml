@@ -1,0 +1,38 @@
+<style>
+a.button {
+    background: transparent url('http://www.oscaralexander.com/tutorials/img/bg_button_a.gif') no-repeat scroll top right;
+    color: #444;
+    display: block;
+    float: left;
+    font: normal 12px arial, sans-serif;
+    height: 24px;
+    margin-right: 6px;
+    padding-right: 18px; /* sliding doors padding */
+    text-decoration: none;
+}
+
+a.button span {
+    background: transparent url('http://www.oscaralexander.com/tutorials/img/bg_button_span.gif') no-repeat;
+    display: block;
+    line-height: 14px;
+    padding: 5px 0 5px 18px;
+}
+</style>
+<?php if(count($this->messages)) : ?>
+<ul>
+    <?php foreach ($this->messages as $msg) : ?>
+    <li><?php echo $msg; ?></li>
+    <?php endforeach; ?>
+</ul>
+<?php endif; ?>
+
+<?php
+
+$title='Home';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<p>
+    <a href="<?php echo $this->url('machine', array('action'=>'query-machines'));?>">Manage Machines</a><br>
+</p>
+

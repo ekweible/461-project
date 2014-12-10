@@ -14,7 +14,7 @@ $this->headTitle($title);
 <?php
 $form = $this->form;
 $form->setAttribute('action', $this->url(
-    'medical',
+    'machine',
     array(
         'action' => 'query-machines',
     )
@@ -27,8 +27,7 @@ echo $this->formRow($form->get('machine'));
 echo $this->formSubmit($form->get('submit'));
 echo $this->form()->closeTag();
 ?>
-<?php
- if($m): ?>
+<?php if($m): ?>
 	<table class="table">
 		<tr>
 		    <td>IP</td><td><?php echo $this->escapeHtml($m->machineip);?></td>
