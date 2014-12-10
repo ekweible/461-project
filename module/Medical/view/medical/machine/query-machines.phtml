@@ -1,0 +1,46 @@
+<?php
+$title = 'Query Machines';
+$this->headTitle($title);
+?>
+<?php if(count($this->messages)) : ?>
+<ul>
+    <?php foreach ($this->messages as $msg) : ?>
+    <li><?php echo $msg; ?></li>
+    <?php endforeach; ?>
+</ul>
+<?php endif; ?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+
+<?php
+$form = $this->form;
+$form->setAttribute('action', $this->url(
+    'machine',
+    array(
+        'action' => 'query-machines',
+    )
+));
+$form->prepare();
+
+echo $this->form()->openTag($form);
+
+echo $this->formRow($form->get('machine'));
+echo $this->formSubmit($form->get('submit'));
+echo $this->form()->closeTag();
+?>
+<?php if($m): ?>
+	<table class="table">
+		<tr>
+		    <td>IP</td><td><?php echo $this->escapeHtml($m->machineip);?></td>
+		    <td>Status</td><td><?php echo $this->escapeHtml($m->status);?></td>
+		    <td>Capacity</td><td><?php echo $this->escapeHtml($m->capacity);?></td>
+		    <td>Storage Used</td><td><?php echo $this->escapeHtml($m->storageused);?></td>
+		    <td>Room Id</td><td><?php echo $this->escapeHtml($m->roomid);?></td>
+		</tr>
+	</table>
+	<h3>Software installed</h3><br />
+	<table class="table">
+	<?php foreach($software as $s): ?>
+		<tr> <td> <?=$s->name?> </td></tr>
+	<?php endforeach; ?>
+	</table>
+<?php endif; ?>

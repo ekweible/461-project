@@ -28,7 +28,12 @@ class SoftwareTable
 		}
 		return $row;
 	}
+	public function getByMachineip($id)
+	{
+		$rowset = $this->tableGateway->select(array('refip'=>$id));
 
+		return $rowset;
+	}
 
 
 }

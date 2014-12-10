@@ -3,7 +3,8 @@ return array(
 	'controllers'=>array(
 		'invokables'=> array(
 			'Medical\Controller\Medical'=>'Medical\Controller\MedicalController',
-            'Medical\Controller\Room'=>'Medical\Controller\RoomController',
+			'Medical\Controller\Room'=>'Medical\Controller\RoomController',
+			'Medical\Controller\Machine'=>'Medical\Controller\MachineController',
 			'Medical\Controller\User'=>'Medical\Controller\UserController',
 		),
 	),
@@ -24,20 +25,34 @@ return array(
 					),
 				),
 			),
-            'room'=>array(
-                'type'=>'segment',
-                'options'=>array(
-                    'route'=>'/room[/:action][/:id]',
-                    'constraints'=>array(
-                        'action'=>'[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id'=>'[0-9]+',
-                    ),
-                    'defaults'=>array(
-                        'controller'=>'Medical\Controller\Room',
-                        'action'=>'index',
-                    ),
-                )
-            ),
+			'room'=>array(
+				'type'=>'segment',
+				'options'=>array(
+					'route'=>'/room[/:action][/:id]',
+					'constraints'=>array(
+						'action'=>'[a-zA-Z][a-zA-Z0-9_-]*',
+						'id'=>'[0-9]+',
+					),
+					'defaults'=>array(
+						'controller'=>'Medical\Controller\Room',
+						'action'=>'index',
+					),
+				)
+			),
+			'machine'=>array(
+				'type'=>'segment',
+				'options'=>array(
+					'route'=>'/machine[/:action][/:id]',
+					'constraints'=>array(
+						'action'=>'[a-zA-Z][a-zA-Z0-9_-]*',
+						'id'=>'[0-9]+',
+					),
+					'defaults'=>array(
+						'controller'=>'Medical\Controller\Machine',
+						'action'=>'index',
+					),
+				)
+			),
 			'user'=>array(
 				'type'=>'segment',
 				'options'=>array(

@@ -5,7 +5,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Session\Container;
 
-class MedicalController extends AbstractActionController
+class MachineController extends AbstractActionController
 {
 	protected $userTable;
 	protected $machineTable;
@@ -99,13 +99,13 @@ class MedicalController extends AbstractActionController
 
 			if ($form->isValid()) {
 				$data = $form->getData();
-				$machines = $this->getMachineTable()->getOneByMachineip($data['machine']);
+				$m = $this->getMachineTable()->getOneByMachineip($data['machine']);
 				$software = $this->getSoftwareTable()->getByMachineip($data['machine']);
 			}
 		}
 
 		return array(
-			'm' => $machines,
+			'm' => $m,
 			'software' => $software,
 			'form' => $form,
 			'messages' => $this->flashMessenger()->getCurrentMessages());
