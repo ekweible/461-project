@@ -10,6 +10,7 @@ class MachineController extends AbstractActionController
 	protected $userTable;
 	protected $machineTable;
 	protected $softwareTable;
+	protected $videoTable;
 	protected $reservationTable;
 	protected $user;
 	public function getUserTable()
@@ -20,6 +21,15 @@ class MachineController extends AbstractActionController
 			$this->userTable = $sm->get('Medical\Model\UserTable');
 		}
 		return $this->userTable;
+	}
+	public function getVideoTable()
+	{
+		if(!$this->videoTable)
+		{
+			$sm = $this->getServiceLocator();
+			$this->videoTable = $sm->get('Medical\Model\VideoTable');
+		}
+		return $this->videoTable;
 	}
 	public function getMachineTable()
 	{
@@ -107,6 +117,49 @@ class MachineController extends AbstractActionController
 		return array(
 			'm' => $m,
 			'software' => $software,
+			'form' => $form,
+			'messages' => $this->flashMessenger()->getCurrentMessages());
+	}
+
+	public function queryVideosAction()
+	{
+		$machines = $this->getMachineTable()->fetchAll();
+		$options = array();
+		foreach($machines as $machine)
+		{
+			$options[$machine->machineip]=$machine->machineip;
+		}
+		$form  = new Form();
+		$form->add(array(
+			'name'=>'submit',
+			'type'=>'submit',
+			'attributes'=>array(
+				'value'=>'Submit',
+				'id'=>'submitbutton',
+			),
+		));
+		$form->add(array(
+			'name'=> 'machine',
+			'type' => 'Select',
+			'options'=>array(
+				'label'=> 'Machine IP: ',
+				'options'=>$options
+			),
+		));
+		$request = $this->getRequest();
+		if ($request->isPost()) {
+			$form->setData($request->getPost());
+
+			if ($form->isValid()) {
+				$data = $form->getData();
+				$m = $this->getMachineTable()->getOneByMachineip($data['machine']);
+				$videos = $this->getVideoTable()->getByMachineip($data['machine']);
+			}
+		}
+
+		return array(
+			'm' => $m,
+			'videos' => $videos,
 			'form' => $form,
 			'messages' => $this->flashMessenger()->getCurrentMessages());
 	}
