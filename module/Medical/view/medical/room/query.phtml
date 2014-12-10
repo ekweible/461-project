@@ -31,11 +31,13 @@ echo $this->form()->closeTag();
 <table class="table">
     <tr>
         <th>Room</th>
+        <th>Machine IP</th>
         <th>&nbsp;</th>
     </tr>
     <?php foreach ($rooms as $room) : ?>
     <tr>
         <td><?php echo $this->escapeHtml($room->roomnum);?></td>
+        <td><?php echo $this->escapeHtml($room->machineip);?></td>
         <td>
             <a href="<?php echo $this->url('room', array('action'=>'edit', 'id'=>$room->roomid));?>">Edit</a>
             <a href="<?php echo $this->url('room', array('action'=>'delete', 'id'=>$room->roomid));?>">Delete</a>

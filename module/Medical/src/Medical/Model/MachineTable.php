@@ -29,6 +29,14 @@ class MachineTable
 		return $row;
 	}
 
-
-
+    public function getOneByRoom($id)
+    {
+        $rowset = $this->tableGateway->select(array('roomid'=>$id));
+        $row = $rowset->current();
+        if (!$row)
+        {
+            return false;
+        }
+        return $row;
+    }
 }
