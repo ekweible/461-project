@@ -31,6 +31,11 @@ class Room implements InputFilterAwareInterface
 		$this->roomnum = (!empty($data['roomnum'])) ? $data['roomnum'] : null;
 	}
 
+    public function getArrayCopy()
+    {
+        return get_object_vars($this);
+    }
+
     public function setInputFilter(InputFilterInterface $inputFilter)
     {
         throw new \Exception("not used");

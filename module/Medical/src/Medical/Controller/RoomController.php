@@ -62,8 +62,8 @@ class RoomController extends AbstractActionController
 
             if ($form->isValid()) {
                 $data = $form->getData();
-                $room = $this->getRoomTable()->getRoomByNum($data['roomnum']);
-                if(!$room)
+                $id = $this->getRoomTable()->getRoomByNum($data['roomnum']);
+                if(!$id)
                 {
                     $room->exchangeArray($data);
                     $id = $this->getRoomTable()->saveRoom($room);
@@ -71,13 +71,131 @@ class RoomController extends AbstractActionController
                 }
                 else
                 {
-                    $this->flashMessenger()->addMessage('Room ' . $room->roomnum . ' already exists.');
+                    $this->flashMessenger()->addMessage('Room already exists.');
                 }
             }
         }
         return array(	'form' => $form,
             'messages' => $this->flashMessenger()->getCurrentMessages());
     }
+
+    public function queryAction()
+    {
+        $form  = new RoomForm();
+        $form->remove('roomid');
+        $form->remove('roomnum');
+        $form->add(array(
+            'name'=>'roomid',
+            'type'=>'Select',
+            'options'=>array(
+                'label'=>'Room Number: ',
+                'value_options' => $this->getRoomTable()->getRoomOptions()
+            )
+        ));
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $form->setData($request->getPost());
+
+            if ($form->isValid()) {
+                $data = $form->getData();
+                if ($data['roomid'] && $data['roomid'] != -1) {
+                    $rooms = array($this->getRoomTable()->getRoomById($data['roomid']));
+                } else {
+                    $rooms = $this->getRoomTable()->getRooms();
+                }
+            }
+        }
+
+        return array(
+            'rooms' => $rooms,
+            'form' => $form,
+            'messages' => $this->flashMessenger()->getCurrentMessages());
+    }
+
+    public function selectEditAction()
+    {
+        $id = $this->user->id;
+        if (!$id) {
+            return $this->redirect()->toRoute('room', array(
+                'action' => 'add'
+            ));
+        }
+        $options = $this->getRoomTable()->getRoomOptions();
+        unset($options['-1']);
+        $form  = new Form();
+        $form->add(array(
+            'name'=>'submit',
+            'type'=>'submit',
+            'attributes'=>array(
+                'value'=>'Submit',
+                'id'=>'submitbutton',
+            ),
+        ));
+        $form->add(array(
+            'name'=> 'roomid',
+            'type' => 'Select',
+            'options'=>array(
+                'label'=> 'Room: ',
+                'options'=>$options
+            ),
+        ));
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $form->setData($request->getPost());
+
+            if ($form->isValid()) {
+                $data = $form->getData();
+                return $this->redirect()->toRoute('room', array('action' => 'edit', 'id' => $data['roomid']));
+            }
+        }
+
+        return array(
+            'id' => $id,
+            'form' => $form,
+            'messages' => $this->flashMessenger()->getCurrentMessages());
+    }
+
+    public function editAction()
+    {
+        //$id = $this->user->id;
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if (!$id) {
+            return $this->redirect()->toRoute('room', array(
+                'action' => 'add'
+            ));
+        }
+        $room = $this->getRoomTable()->getRoomById($id);
+        $form  = new RoomForm();
+        $form->bind($room);
+        $form->get('submit')->setAttribute('value', 'Edit');
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $form->setInputFilter($room->getInputFilter());
+            $form->setData($request->getPost());
+
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $roomExists = $this->getRoomTable()->getRoomByNum($data->roomnum);
+                if(!$roomExists)
+                {
+                    $this->getRoomTable()->saveRoom($data);
+
+                    // Redirect to list of rooms
+                    return $this->redirect()->toRoute('room');
+                }
+                else
+                {
+                    $this->flashMessenger()->addMessage('Room already exists');
+                }
+            }
+        }
+
+        return array(
+            'id' => $id,
+            'form' => $form,
+            'messages' => $this->flashMessenger()->getCurrentMessages());
+    }
+
 //
 //    public function selectEditAction()
 //    {

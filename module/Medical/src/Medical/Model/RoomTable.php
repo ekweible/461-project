@@ -35,12 +35,28 @@ class RoomTable
         $row = $rowset->current();
         if (!$row)
         {
-            return null;
+            return false;
         }
         return $row;
     }
 
-    public function saveUser(Room $room)
+    public function getRooms()
+    {
+        return $this->fetchAll();
+    }
+
+    public function getRoomOptions()
+    {
+        $rooms = $this->getRooms();
+        $roomOptions = array('-1' => '-- All --');
+        foreach($rooms as $room) {
+            $roomOptions[$room->roomid] = $room->roomnum;
+        }
+        asort($roomOptions);
+        return $roomOptions;
+    }
+
+    public function saveRoom(Room $room)
     {
         $data = array(
             'roomnum' => $room->roomnum,

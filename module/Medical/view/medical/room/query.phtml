@@ -1,0 +1,46 @@
+<?php
+$title = 'Query Rooms';
+$this->headTitle($title);
+?>
+<?php if(count($this->messages)) : ?>
+    <ul>
+        <?php foreach ($this->messages as $msg) : ?>
+            <li><?php echo $msg; ?></li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+
+<?php
+$form = $this->form;
+$form->setAttribute('action', $this->url(
+    'room',
+    array(
+        'action' => 'query',
+    )
+));
+$form->prepare();
+
+echo $this->form()->openTag($form);
+
+echo $this->formRow($form->get('roomid'));
+echo $this->formSubmit($form->get('submit'));
+echo $this->form()->closeTag();
+?>
+<?php if($rooms): ?>
+<table class="table">
+    <tr>
+        <th>Room</th>
+        <th>&nbsp;</th>
+    </tr>
+    <?php foreach ($rooms as $room) : ?>
+    <tr>
+        <td><?php echo $this->escapeHtml($room->roomnum);?></td>
+        <td>
+            <a href="<?php echo $this->url('room', array('action'=>'edit', 'id'=>$room->roomid));?>">Edit</a>
+            <a href="<?php echo $this->url('room', array('action'=>'delete', 'id'=>$room->roomid));?>">Delete</a>
+        </td>
+	</tr>
+	<?php endforeach; ?>
+</table>
+<?php endif; ?>
