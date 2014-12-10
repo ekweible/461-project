@@ -1,0 +1,59 @@
+<?php
+$title = 'Query Videos by Room';
+$this->headTitle($title);
+?>
+<?php if(count($this->messages)) : ?>
+<ul>
+    <?php foreach ($this->messages as $msg) : ?>
+    <li><?php echo $msg; ?></li>
+    <?php endforeach; ?>
+</ul>
+<?php endif; ?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+
+<?php
+$form = $this->form;
+$form->setAttribute('action', $this->url(
+    'room',
+    array(
+        'action' => 'query-videos',
+    )
+));
+$form->prepare();
+
+echo $this->form()->openTag($form);
+
+echo $this->formRow($form->get('room'));
+echo $this->formSubmit($form->get('submit'));
+echo $this->form()->closeTag();
+?>
+<?php if($r): ?>
+	<h3>Videos Captured in <?= $r->roomnum ?></h3><br />
+	<table class="table">
+	<tr>
+		<th> Video Id </th>
+		<th> Captured Video Name </th>
+		<th> Captured Date </th>
+		<th> Date of analysis </th>
+		<th> Uploaded File </th>
+		<th> Analysis Directory </th>
+		<th> Room Id</th>
+		<th> Size </th>
+		<th> Length </th>
+	</tr>
+	<?php foreach($videos as $v): ?>
+		<tr> 
+			<td> <?=$v->videoid?> </td>
+			<td> <?=$v->capturedvideoname?> </td>
+			<td> <?=$v->captureddatetime?> </td>
+			<td> <?=$v->dateanalysisdone?> </td>
+			<td> <?=$v->uploadedfilename?> </td>
+			<td> <?=$v->analysisdirname?> </td>
+			<td> <?=$v->roomid?> </td>
+			<td> <?=$v->size?> </td>
+			<td> <?=$v->length?> </td>
+		</tr>
+	<?php endforeach; ?>
+	</table>
+<?php endif; ?>
+
