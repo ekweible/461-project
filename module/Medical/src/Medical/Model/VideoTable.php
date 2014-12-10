@@ -28,4 +28,14 @@ class VideoTable
 		}
 		return $row;
 	}
+	public function getByMachineip($id)
+	{
+		$rowset = $this->tableGateway->select(array('machineip'=>$id));
+		return $rowset;
+	}
+	public function getByRoomid($id)
+	{
+		$rowset = $this->tableGateway->select(array('roomid'=>$id));
+		return $rowset;
+	}
 }
