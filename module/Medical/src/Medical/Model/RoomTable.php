@@ -79,4 +79,8 @@ class RoomTable
         }
         return $this->tableGateway->lastInsertValue;
     }
+	public function deleteRoom($id)
+	{
+		$this->tableGateway->delete(array('roomid' => $id));
+	}
 }

@@ -196,6 +196,54 @@ class RoomController extends AbstractActionController
             'messages' => $this->flashMessenger()->getCurrentMessages());
     }
 
+	public function deleteAction()
+	{
+		$id = $this->user->id;
+		if (!$id) {
+			return $this->redirect()->toRoute('user', array(
+				'action' => 'add'
+			));
+		}
+		$rooms = $this->getRoomTable()->fetchAll();
+		$options = array();
+		foreach($rooms as $room)
+		{
+			$options[$room->roomid]=$room->roomnum;
+		}
+		$form  = new Form();
+		$form->add(array(
+			'name'=>'submit',
+			'type'=>'submit',
+			'attributes'=>array(
+				'value'=>'Submit',
+				'id'=>'submitbutton',
+			),
+		));
+		$form->add(array(
+			'name'=> 'room',
+			'type' => 'Select',
+			'options'=>array(
+				'label'=> 'Room: ',
+				'options'=>$options
+			),
+		));
+		$request = $this->getRequest();
+		if ($request->isPost()) {
+			$form->setData($request->getPost());
+
+			if ($form->isValid()) {
+				$data = $form->getData();
+				$user = $this->getRoomTable()->deleteRoom($data['room']);
+				$this->flashMessenger()->addMessage('Room Deleted');
+				return $this->redirect()->toRoute('room', array('action' => 'delete'));
+			}
+		}
+
+		return array(
+			'id' => $id,
+			'form' => $form,
+			'messages' => $this->flashMessenger()->getCurrentMessages());
+	}
 //
 //    public function selectEditAction()
 //    {
