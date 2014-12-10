@@ -15,6 +15,7 @@ use Zend\Session\SessionManager;
 class RoomController extends AbstractActionController
 {
     protected $roomTable;
+    protected $machineTable;
     protected $user;
     public function onDispatch( \Zend\Mvc\MvcEvent $e )
     {
@@ -42,6 +43,16 @@ class RoomController extends AbstractActionController
             $this->roomTable = $sm->get('Medical\Model\RoomTable');
         }
         return $this->roomTable;
+    }
+
+    public function getMachineTable()
+    {
+        if(!$this->machineTable)
+        {
+            $sm = $this->getServiceLocator();
+            $this->machineTable = $sm->get('Medical\Model\MachineTable');
+        }
+        return $this->machineTable;
     }
 
     public function indexAction()
@@ -99,9 +110,19 @@ class RoomController extends AbstractActionController
             if ($form->isValid()) {
                 $data = $form->getData();
                 if ($data['roomid'] && $data['roomid'] != -1) {
-                    $rooms = array($this->getRoomTable()->getRoomById($data['roomid']));
+                    $room = $this->getRoomTable()->getRoomById($data['roomid']);
+                    $room->machineip = $this->getMachineTable()->getOneByRoom($room->roomid)->machineip;
+                    $rooms = array($room);
                 } else {
-                    $rooms = $this->getRoomTable()->getRooms();
+                    $roomsWithoutMachine = $this->getRoomTable()->getRooms();
+                    $rooms = array();
+                    foreach($roomsWithoutMachine as $room) {
+                        $roomWithMachine = new Room();
+                        $roomWithMachine->roomid = $room->roomid;
+                        $roomWithMachine->roomnum = $room->roomnum;
+                        $roomWithMachine->machineip = $this->getMachineTable()->getOneByRoom($room->roomid)->machineip;
+                        array_push($rooms, $roomWithMachine);
+                    }
                 }
             }
         }

@@ -23,6 +23,7 @@ class Room implements InputFilterAwareInterface
 {
 	public $roomid;
 	public $roomnum;
+    public $machineip;
     protected $inputFilter;
 	
 	public function exchangeArray($data)
