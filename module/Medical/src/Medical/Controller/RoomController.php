@@ -25,6 +25,10 @@ class RoomController extends AbstractActionController
 		{
 			$this->user = $session->uid;
 		}
+
+
+		if(!$this->user->role)
+			$this->layout('layout/user');
 		return parent::onDispatch( $e );
 	}
 
@@ -66,7 +70,9 @@ class RoomController extends AbstractActionController
 
 	public function indexAction()
 	{
-		return array('messages' => $this->flashMessenger()->getCurrentMessages());
+		return array('messages' => $this->flashMessenger()->getCurrentMessages(),
+			'role' => $this->user->role,
+);
 	}
 
 	public function addAction()

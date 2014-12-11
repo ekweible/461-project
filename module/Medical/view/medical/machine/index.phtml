@@ -33,7 +33,9 @@ $this->headTitle($title);
 ?>
 <h1><?php echo $this->escapeHtml($title); ?></h1>
 <p>
+<?php if($role) : ?>
     <a href="<?php echo $this->url('machine', array('action'=>'query-machines'));?>">Manage Machines</a><br>
+<?php endif ?>
     <a href="<?php echo $this->url('machine', array('action'=>'query-videos'));?>">Get Videos By Machine</a><br>
 </p>
 

@@ -59,6 +59,8 @@ class MachineController extends AbstractActionController
 		else
 			return $this->redirect()->toRoute('user', array('action' => 'login'));
 
+		if(!$this->user->role)
+			$this->layout('layout/user');
 
 		return parent::onDispatch( $e );
 	}
@@ -67,6 +69,7 @@ class MachineController extends AbstractActionController
 	{
 		return new ViewModel(array(
 			'messages' => $this->flashMessenger()->getMessages(),
+			'role' => $this->user->role,
 		));
    	}
 

@@ -24,6 +24,8 @@ class UserController extends AbstractActionController
 		{
 			$this->user = $session->uid;
 		}
+		if(!$this->user->role)
+			$this->layout('layout/user');
 		return parent::onDispatch( $e );
 	}
 
@@ -48,12 +50,14 @@ class UserController extends AbstractActionController
     public function indexAction()
     {
         return array(
-            'messages' => $this->flashMessenger()->getCurrentMessages()
+            'messages' => $this->flashMessenger()->getCurrentMessages(),
+			'role' => $this->user->role,
         );
     }
 
 	public function loginAction()
 	{
+		$this->layout('layout/login');
 		$form = new UserForm();
 		$form->get('submit')->setValue('Login');
 		$form->remove('email');
@@ -88,6 +92,7 @@ class UserController extends AbstractActionController
 
 	public function addAction()
 	{
+		$this->layout('layout/login');
 		$form = new UserForm();
 		$form->get('submit')->setValue('Create Account');
 
@@ -292,11 +297,9 @@ class UserController extends AbstractActionController
 			'form' => $form,
 			'messages' => $this->flashMessenger()->getCurrentMessages());
 	}
-	public function viewAction()
-	{
-	}
 
     public function recoverAction() {
+	$this->layout('layout/login');
         $form = new PasswordRecoveryForm();
 
         $request = $this->getRequest();
