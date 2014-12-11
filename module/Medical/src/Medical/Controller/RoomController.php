@@ -295,6 +295,9 @@ class RoomController extends AbstractActionController
 		$form->add(array(
 			'name'=> 'room',
 			'type' => 'Select',
+			'attributes' => array(
+				'multiple' => 'multiple',
+			),
 			'options'=>array(
 				'label'=> 'Room: ',
 				'options'=>$options
