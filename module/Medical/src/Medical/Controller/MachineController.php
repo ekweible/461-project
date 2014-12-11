@@ -141,6 +141,9 @@ class MachineController extends AbstractActionController
 		$form->add(array(
 			'name'=> 'machine',
 			'type' => 'Select',
+			'attributes' => array(
+				'multiple' => 'multiple',
+			),
 			'options'=>array(
 				'label'=> 'Machine IP: ',
 				'options'=>$options
@@ -158,7 +161,6 @@ class MachineController extends AbstractActionController
 		}
 
 		return array(
-			'm' => $m,
 			'videos' => $videos,
 			'form' => $form,
 			'messages' => $this->flashMessenger()->getCurrentMessages());
