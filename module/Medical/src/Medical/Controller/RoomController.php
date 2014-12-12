@@ -11,13 +11,19 @@ use Zend\Session\Config\SessionConfig;
 use Zend\Session\Container;
 use Zend\Session\SessionManager;
 
-
+/*
+* Controller for contents of Rooms item in navigation
+*/
 class RoomController extends AbstractActionController
 {
 	protected $roomTable;
 	protected $videoTable;
 	protected $machineTable;
 	protected $user;
+
+	/*
+	* Dispatch functions allow code to be run before all controllers
+	*/
 	public function onDispatch( \Zend\Mvc\MvcEvent $e )
 	{
 		$session = new Container('user');
@@ -32,14 +38,9 @@ class RoomController extends AbstractActionController
 		return parent::onDispatch( $e );
 	}
 
-	public function initSession($config)
-	{
-		$sessionConfig = new SessionConfig();
-		$sessionConfig->setOptions($config);
-		$sessionManager = new SessionManager($sessionConfig);
-		$sessionManager->start();
-		Container::setDefaultManager($sessionManager);
-	}
+	/*
+	* Get table functions allow controllers to access the database interface classes.
+	*/
 	public function getRoomTable()
 	{
 		if(!$this->roomTable)
@@ -67,12 +68,14 @@ class RoomController extends AbstractActionController
 		}
 		return $this->machineTable;
 	}
-
+	/*
+	* Room page home action 
+	*/
 	public function indexAction()
 	{
 		return array('messages' => $this->flashMessenger()->getCurrentMessages(),
 			'role' => $this->user->role,
-);
+			);
 	}
 
 	public function addAction()
@@ -327,174 +330,4 @@ class RoomController extends AbstractActionController
 			'messages' => $this->flashMessenger()->getCurrentMessages());
 	}
 
-//
-//	public function selectEditAction()
-//	{
-//		$id = $this->user->id;
-//		if (!$id) {
-//			return $this->redirect()->toRoute('user', array(
-//				'action' => 'add'
-//			));
-//		}
-//		$users = $this->getUserTable()->fetchAll();
-//		$options = array();
-//		foreach($users as $user)
-//		{
-//			$options[$user->id]=$user->username;
-//		}
-//		$form  = new Form();
-//		$form->add(array(
-//			'name'=>'submit',
-//			'type'=>'submit',
-//			'attributes'=>array(
-//				'value'=>'Submit',
-//				'id'=>'submitbutton',
-//			),
-//		));
-//		$form->add(array(
-//			'name'=> 'user',
-//			'type' => 'Select',
-//			'options'=>array(
-//				'label'=> 'Role: ',
-//				'options'=>$options
-//			),
-//		));
-//		$request = $this->getRequest();
-//		if ($request->isPost()) {
-//			$form->setData($request->getPost());
-//
-//			if ($form->isValid()) {
-//				$data = $form->getData();
-//				return $this->redirect()->toRoute('user', array('action' => 'edit', 'id' => $data['user']));
-//			}
-//		}
-//
-//		return array(
-//			'id' => $id,
-//			'form' => $form,
-//			'messages' => $this->flashMessenger()->getCurrentMessages());
-//	}
-//
-//	public function queryUsersAction()
-//	{
-//		$form  = new UserForm();
-//		$form->remove('password');
-//		$form->remove('email');
-//		$form->remove('id');
-//		$form->remove('username');
-//		$request = $this->getRequest();
-//		if ($request->isPost()) {
-//			$form->setData($request->getPost());
-//
-//			if ($form->isValid()) {
-//				$data = $form->getData();
-//				$users = $this->getUserTable()->getUsersByRole($data['role']);
-//			}
-//		}
-//
-//		return array(
-//			'users' => $users,
-//			'form' => $form,
-//			'messages' => $this->flashMessenger()->getCurrentMessages());
-//	}
-//	public function editAction()
-//	{
-//		//$id = $this->user->id;
-//		$id = (int) $this->params()->fromRoute('id', 0);
-//		if (!$id) {
-//			return $this->redirect()->toRoute('user', array(
-//				'action' => 'add'
-//			));
-//		}
-//		$user = $this->getUserTable()->getUser($id);
-//		$form  = new UserForm();
-//		$form->bind($user);
-//		$form->get('submit')->setAttribute('value', 'Edit');
-//		$request = $this->getRequest();
-//		if ($request->isPost()) {
-//			$form->setInputFilter($user->getInputFilter());
-//			$form->setData($request->getPost());
-//
-//			if ($form->isValid()) {
-//				$data = $form->getData();
-//				$userExists = $this->getUserTable()->getUserByName($data->username);
-//				if(!$userExists || $user->username == $data->username)
-//				{
-//					$this->getUserTable()->saveUser($data);
-//
-//					// Redirect to list of users
-//					return $this->redirect()->toRoute('medical');
-//				}
-//				else
-//				{
-//					$this->flashMessenger()->addMessage('Username already exists');
-//				}
-//			}
-//		}
-//
-//		return array(
-//			'id' => $id,
-//			'form' => $form,
-//			'messages' => $this->flashMessenger()->getCurrentMessages());
-//	}
-//
-//	public function deleteAction()
-//	{
-//		$id = $this->user->id;
-//		if (!$id) {
-//			return $this->redirect()->toRoute('user', array(
-//				'action' => 'add'
-//			));
-//		}
-//		$users = $this->getUserTable()->fetchAll();
-//		$options = array();
-//		foreach($users as $user)
-//		{
-//			$options[$user->id]=$user->username;
-//		}
-//		$form  = new Form();
-//		$form->add(array(
-//			'name'=>'submit',
-//			'type'=>'submit',
-//			'attributes'=>array(
-//				'value'=>'Submit',
-//				'id'=>'submitbutton',
-//			),
-//		));
-//		$form->add(array(
-//			'name'=> 'user',
-//			'type' => 'Select',
-//			'options'=>array(
-//				'label'=> 'Role: ',
-//				'options'=>$options
-//			),
-//		));
-//		$request = $this->getRequest();
-//		if ($request->isPost()) {
-//			$form->setData($request->getPost());
-//
-//			if ($form->isValid()) {
-//				$data = $form->getData();
-//				if($id != $data['user'])
-//				{
-//					$user = $this->getUserTable()->deleteUser($data['user']);
-//					$this->flashMessenger()->addMessage('User Deleted');
-//					return $this->redirect()->toRoute('user', array('action' => 'delete'));
-//				}
-//				else
-//				{
-//					$this->flashMessenger()->addMessage('You Cannot Delete Yourself');
-//				}
-//
-//			}
-//		}
-//
-//		return array(
-//			'id' => $id,
-//			'form' => $form,
-//			'messages' => $this->flashMessenger()->getCurrentMessages());
-//	}
-//	public function viewAction()
-//	{
-//	}
 }

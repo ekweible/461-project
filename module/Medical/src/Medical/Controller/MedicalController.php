@@ -5,13 +5,23 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Session\Container;
 
+
+/*
+ * home page controller
+*/
+
 class MedicalController extends AbstractActionController
 {
 	protected $userTable;
 	protected $machineTable;
 	protected $softwareTable;
-	protected $reservationTable;
 	protected $user;
+
+
+
+	/*
+	* Get table functions allow controllers to access the database interface classes.
+	*/
 	public function getUserTable()
 	{
 		if(!$this->userTable)
@@ -39,6 +49,11 @@ class MedicalController extends AbstractActionController
 		}
 		return $this->softwareTable;
 	}
+
+
+	/*
+	* Dispatch functions allow code to be run before all controllers
+	*/
 	public function onDispatch( \Zend\Mvc\MvcEvent $e )
 	{
 		$session = new Container('user');
@@ -55,6 +70,9 @@ class MedicalController extends AbstractActionController
 		return parent::onDispatch( $e );
 	}
 
+	/*
+	* Home page action
+	*/
 	public function indexAction()
 	{
 		return new ViewModel(array(
@@ -63,6 +81,10 @@ class MedicalController extends AbstractActionController
 		));
    	}
 
+	/*
+	* logout Action does not actually have a view
+	* Redirects to login action within the user controller
+	*/
 	public function logoutAction()
 	{
 		$session = new Container('user');
@@ -71,46 +93,4 @@ class MedicalController extends AbstractActionController
 
 	}
 
-	public function queryMachinesAction()
-	{
-		$machines = $this->getMachineTable()->fetchAll();
-		$options = array();
-		foreach($machines as $machine)
-		{
-			$options[$machine->machineip]=$machine->machineip;
-		}
-		$form  = new Form();
-		$form->add(array(
-			'name'=>'submit',
-			'type'=>'submit',
-			'attributes'=>array(
-				'value'=>'Submit',
-				'id'=>'submitbutton',
-			),
-		));
-		$form->add(array(
-			'name'=> 'machine',
-			'type' => 'Select',
-			'options'=>array(
-				'label'=> 'Machine IP: ',
-				'options'=>$options
-			),
-		));
-		$request = $this->getRequest();
-		if ($request->isPost()) {
-			$form->setData($request->getPost());
-
-			if ($form->isValid()) {
-				$data = $form->getData();
-				$machines = $this->getMachineTable()->getOneByMachineip($data['machine']);
-				$software = $this->getSoftwareTable()->getByMachineip($data['machine']);
-			}
-		}
-
-		return array(
-			'm' => $machines,
-			'software' => $software,
-			'form' => $form,
-			'messages' => $this->flashMessenger()->getCurrentMessages());
-	}
 }

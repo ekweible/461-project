@@ -11,8 +11,11 @@ class MachineController extends AbstractActionController
 	protected $machineTable;
 	protected $softwareTable;
 	protected $videoTable;
-	protected $reservationTable;
 	protected $user;
+
+	/*
+	* Get table functions allow controllers to access the database interface classes.
+	*/
 	public function getUserTable()
 	{
 		if(!$this->userTable)
@@ -49,6 +52,12 @@ class MachineController extends AbstractActionController
 		}
 		return $this->softwareTable;
 	}
+
+
+	/*
+	* Dispatch functions allow code to be run before all controllers
+	*/
+
 	public function onDispatch( \Zend\Mvc\MvcEvent $e )
 	{
 		$session = new Container('user');
@@ -65,6 +74,10 @@ class MachineController extends AbstractActionController
 		return parent::onDispatch( $e );
 	}
 
+	/*
+	* Machine homepage Action
+	*/
+
 	public function indexAction()
 	{
 		return new ViewModel(array(
@@ -73,22 +86,20 @@ class MachineController extends AbstractActionController
 		));
    	}
 
-	public function logoutAction()
-	{
-		$session = new Container('user');
-		$session->getManager()->getStorage()->clear('user');
-		return $this->redirect()->toRoute('user', array('action' => 'login'));
-
-	}
-
+	/*
+	* Mangage machines action
+	*/
 	public function queryMachinesAction()
 	{
+		// Get all machines
 		$machines = $this->getMachineTable()->fetchAll();
 		$options = array();
+		// Build options list for select
 		foreach($machines as $machine)
 		{
 			$options[$machine->machineip]=$machine->machineip;
 		}
+		// Build form with submit button and select with options bulit before
 		$form  = new Form();
 		$form->add(array(
 			'name'=>'submit',
@@ -106,17 +117,22 @@ class MachineController extends AbstractActionController
 				'options'=>$options
 			),
 		));
+		// Get possible post from form just built.
 		$request = $this->getRequest();
 		if ($request->isPost()) {
+			//fill form with data if returning later
 			$form->setData($request->getPost());
 
+			// If nothing on the form is fishy
 			if ($form->isValid()) {
 				$data = $form->getData();
+				// query selected machine and its software
 				$m = $this->getMachineTable()->getOneByMachineip($data['machine']);
 				$software = $this->getSoftwareTable()->getByMachineip($data['machine']);
 			}
 		}
 
+		//send data to the view
 		return array(
 			'm' => $m,
 			'software' => $software,
@@ -124,14 +140,23 @@ class MachineController extends AbstractActionController
 			'messages' => $this->flashMessenger()->getCurrentMessages());
 	}
 
+
+	/*
+	* Finding videos by machines action
+	*/
+
 	public function queryVideosAction()
 	{
+		// Get all machines
 		$machines = $this->getMachineTable()->fetchAll();
 		$options = array();
+		// Build options list for select
 		foreach($machines as $machine)
 		{
 			$options[$machine->machineip]=$machine->machineip;
 		}
+
+		// Build form with submit button and select with options bulit before
 		$form  = new Form();
 		$form->add(array(
 			'name'=>'submit',
@@ -152,17 +177,23 @@ class MachineController extends AbstractActionController
 				'options'=>$options
 			),
 		));
+
+
+		// Get possible post from form just built.
 		$request = $this->getRequest();
 		if ($request->isPost()) {
+			//fill form with data if returning later
 			$form->setData($request->getPost());
-
+			// If nothing on the form is fishy
 			if ($form->isValid()) {
 				$data = $form->getData();
-				$m = $this->getMachineTable()->getOneByMachineip($data['machine']);
+				// query videos
 				$videos = $this->getVideoTable()->getByMachineip($data['machine']);
 			}
 		}
+		
 
+		//send data to the view
 		return array(
 			'videos' => $videos,
 			'form' => $form,
