@@ -359,7 +359,7 @@ class RoomController extends AbstractActionController
             if ($form->isValid()) {
                 $data = $form->getData();
                 $date = $data['date'];
-                $ymd = \DateTime::createFromFormat('Y-M-D H:i:s', $date);
+                $ymd = \DateTime::createFromFormat('Y-m-d', $date);
 
                 $rooms = $this->getRoomTable()->fetchAll();
                 $roomTable = array();
@@ -369,7 +369,7 @@ class RoomController extends AbstractActionController
 
                 $videos = $this->getVideoTable()->fetchAll();
                 foreach($videos as $vid) {
-                    $vidYmd = \DateTime::createFromFormat('Y-M-D H:i:s', $vid->captureddatetime);
+                    $vidYmd = \DateTime::createFromFormat('Y-m-d', $vid->captureddatetime);
                     if ($vidYmd == $ymd) {
                         unset($roomTable[$vid->roomid]);
                     }
@@ -387,6 +387,137 @@ class RoomController extends AbstractActionController
             'rooms' => $rooms,
             'form' => $form,
             'messages' => $this->flashMessenger()->getCurrentMessages());
+    }
+
+    public function queryRoomUtilizationAction()
+    {
+        $rooms = $this->getRoomTable()->fetchAll();
+        $options = array();
+        foreach($rooms as $room)
+        {
+            $options[$room->roomid]=$room->roomnum;
+        }
+        $form  = new Form();
+        $form->add(array(
+            'name'=>'submit',
+            'type'=>'submit',
+            'attributes'=>array(
+                'value'=>'Submit',
+                'id'=>'submitbutton',
+            ),
+        ));
+        $form->add(array(
+            'name'=> 'room',
+            'type' => 'Select',
+            'attributes' => array(
+                'multiple' => 'multiple',
+            ),
+            'options'=>array(
+                'label'=> 'Room: ',
+                'options'=>$options
+            ),
+        ));
+        $form->add(array(
+            'name'=>'date',
+            'type'=>'date',
+            'attributes'=>array(
+                'value'=>'Date: ',
+                'id'=>'date',
+            ),
+        ));
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $form->setData($request->getPost());
+
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $date = $data['date'];
+                $room = $data['room'];
+                $util = array();
+                $html = array();
+                $ymd = \DateTime::createFromFormat('Y-m-d', $date);
+
+                foreach ($room as $r) {
+                    $util[$r] = $this->getRoomUtil($this->getRoomTable()->getRoomById($r), $ymd);
+                    $html[$r] = $this->getUtilHtml($util[$r]);
+                }
+
+
+                $rooms = array();
+                foreach($room as $r) {
+                    array_push($rooms, $this->getRoomTable()->getRoomById($r));
+                }
+            }
+        }
+
+        return array(
+            'date' => $date,
+            'rooms' => $rooms,
+            'util' => $util,
+            'html' => $html,
+            'form' => $form,
+            'messages' => $this->flashMessenger()->getCurrentMessages());
+    }
+
+    public function getRoomUtil($room, $date) {
+        $videos = $this->getVideoTable()->getByRoomid($room->roomid);
+        $dateVids = array();
+        foreach ($videos as $v) {
+            $d = \DateTime::createFromFormat('Y-m-d H:i:s', $v->captureddatetime);
+            if ($d->format('Y-m-d') == $date->format('Y-m-d')) {
+                array_push($dateVids, $v);
+            }
+        }
+        usort($dateVids, function($a, $b) {
+            $da = \DateTime::createFromFormat('Y-m-d H:i:s', $a->captureddatetime);
+            $db = \DateTime::createFromFormat('Y-m-d H:i:s', $b->captureddatetime);
+            return $da->getTimestamp() - $db->getTimestamp();
+        });
+        $util = array();
+        $start = 0;
+        $end = 0;
+        if (sizeof($dateVids) == 1) {
+            return array('start' => 0, 'length' => 100);
+        }
+        if (sizeof($dateVids) >= 1) {
+            $d = \DateTime::createFromFormat('Y-m-d H:i:s', $dateVids[0]->captureddatetime);
+            $h = (int) $d->format('H');
+            $m = (int) $d->format('m');
+            $start = $h * 60 + $m;
+        }
+        if (sizeof($dateVids) >= 2) {
+            $db = \DateTime::createFromFormat('Y-m-d H:i:s', $dateVids[0]->captureddatetime);
+            $dbh = (int) $db->format('H');
+            $dbm = (int) $db->format('m');
+            $de = \DateTime::createFromFormat('Y-m-d H:i:s', $dateVids[sizeof($dateVids) - 1]->captureddatetime);
+            $deh = (int) $de->format('H');
+            $dem = (int) $de->format('m');
+            $end = ($deh * 60 + $dem) - ($dbh * 60 + $dbm);
+        }
+        foreach ($dateVids as $dv) {
+            $d = \DateTime::createFromFormat('Y-m-d H:i:s', $dv->captureddatetime);
+            $h = (int)$d->format('H');
+            $m = (int)$d->format('m');
+            $u = array('start' => (($h * 60 + $m)) / ($start), 'length' => $dv->length / ($end - $start) * 100);
+            array_push($util, $u);
+        }
+        return $util;
+    }
+
+    public function getUtilHtml($util) {
+        $h = '<div class="group">';
+        $first = true;
+        $last = 0;
+        foreach ($util as $u) {
+            if (!$first) {
+                $h .= '<div style="float: left; background-color: #fff; height: 25px; width: ' . floor($u['start'] - $last - 5) . '%;"></div>';
+            }
+            $first = false;
+            $h .= '<div style="float: left; background-color: #777; height: 25px; width: ' . floor($u['length']) . '%;"></div>';
+            $last = $u->start + $u->length;
+        }
+        $h .= '</div>';
+        return $h;
     }
 
 }
