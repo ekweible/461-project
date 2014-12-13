@@ -20,6 +20,7 @@ $this->headTitle($title);
 	<?php if($role): ?>
 	<a href="<?php echo $this->url('room', array('action' => 'query'));?>">Query Rooms</a><br>
     <a href="<?php echo $this->url('room', array('action' => 'query-unused-rooms'));?>">Query Unused Rooms</a><br>
+    <a href="<?php echo $this->url('room', array('action' => 'query-room-utilization'));?>">Query Room Utilization</a><br>
 	<a href="<?php echo $this->url('room', array('action' => 'add'));?>">Add Room</a><br>
 	<a href="<?php echo $this->url('room', array('action' => 'select-edit'));?>">Edit Room</a><br>
 	<a href="<?php echo $this->url('room', array('action' => 'delete'));?>">Delete Room</a><br>
