@@ -330,4 +330,63 @@ class RoomController extends AbstractActionController
 			'messages' => $this->flashMessenger()->getCurrentMessages());
 	}
 
+    public function queryUnusedRoomsAction()
+    {
+        $form = new Form();
+        $form->add(array(
+            'name'=>'date',
+            'type'=>'date',
+            'attributes'=>array(
+                'value'=>'Date: ',
+                'id'=>'date',
+            ),
+        ));
+        $form->add(array(
+            'name'=>'submit',
+            'type'=>'submit',
+            'attributes'=>array(
+                'value'=>'Query',
+                'id'=>'submitbutton',
+            ),
+        ));
+
+        $date = null;
+        $rooms = false;
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $form->setData($request->getPost());
+
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $date = $data['date'];
+                $ymd = \DateTime::createFromFormat('Y-M-D H:i:s', $date);
+
+                $rooms = $this->getRoomTable()->fetchAll();
+                $roomTable = array();
+                foreach($rooms as $room) {
+                    $roomTable[$room->roomid] = $room;
+                }
+
+                $videos = $this->getVideoTable()->fetchAll();
+                foreach($videos as $vid) {
+                    $vidYmd = \DateTime::createFromFormat('Y-M-D H:i:s', $vid->captureddatetime);
+                    if ($vidYmd == $ymd) {
+                        unset($roomTable[$vid->roomid]);
+                    }
+                }
+
+                $rooms = array();
+                foreach($roomTable as $key => $v) {
+                    array_push($rooms, $v);
+                }
+            }
+        }
+
+        return array(
+            'date' => $date,
+            'rooms' => $rooms,
+            'form' => $form,
+            'messages' => $this->flashMessenger()->getCurrentMessages());
+    }
+
 }

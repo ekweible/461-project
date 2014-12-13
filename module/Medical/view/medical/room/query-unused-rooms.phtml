@@ -1,0 +1,43 @@
+<?php
+$title = 'Query Unused Rooms';
+$this->headTitle($title);
+?>
+<?php if(count($this->messages)) : ?>
+    <ul>
+        <?php foreach ($this->messages as $msg) : ?>
+            <li><?php echo $msg; ?></li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+
+<?php
+$form = $this->form;
+$form->setAttribute('action', $this->url(
+    'room',
+    array(
+        'action' => 'query-unused-rooms',
+    )
+));
+$form->prepare();
+
+echo $this->form()->openTag($form);
+
+echo $this->formRow($form->get('date'));
+echo $this->formSubmit($form->get('submit'));
+echo $this->form()->closeTag();
+?>
+<?php if($rooms): ?>
+    <h3>Unused Rooms on <?= $date ?></h3><br />
+    <table class="table">
+        <tr>
+            <th> Room Number </th>
+        </tr>
+        <?php foreach($rooms as $r): ?>
+            <tr>
+                <td> <?=$r->roomnum?> </td>
+            </tr>
+        <?php endforeach; ?>
+    </table>
+<?php endif; ?>
+

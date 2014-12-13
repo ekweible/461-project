@@ -30,7 +30,7 @@ return array(
 
 	'db' => array(
         	'driver'   => 'pdo_mysql',
-        	'hostname' => 'localhost',
+        	'hostname' => '104.131.21.206',
         	'port'     => 3306,
         	'username' => 'root',
         	'password' => 'root',
