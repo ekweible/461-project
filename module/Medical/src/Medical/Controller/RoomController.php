@@ -391,9 +391,9 @@ class RoomController extends AbstractActionController
 
     public function queryRoomUtilizationAction()
     {
-        $rooms = $this->getRoomTable()->fetchAll();
+        $allRooms = $this->getRoomTable()->fetchAll();
         $options = array();
-        foreach($rooms as $room)
+        foreach($allRooms as $room)
         {
             $options[$room->roomid]=$room->roomnum;
         }
@@ -505,6 +505,9 @@ class RoomController extends AbstractActionController
     }
 
     public function getUtilHtml($util) {
+        if (sizeof($util) == 0) {
+            return 'No utilization for this day.';
+        }
         $h = '<div class="group">';
         $first = true;
         $last = 0;
